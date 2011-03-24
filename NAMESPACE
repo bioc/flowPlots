@@ -1,0 +1,35 @@
+## -------------------------------
+## Make Functions Available 
+## -------------------------------
+
+export( GroupListBoxplot, makeDataList, makeBarplotData, makeTernaryData, 
+   legendPFDStatsGroupNames, computePFDGroupStatsList )
+
+## ------------------------
+## Make Classes Available
+## ------------------------
+
+exportClasses("StackedData")
+
+## -----------------------------
+## Make Class Methods Available
+## -----------------------------
+
+exportMethods(
+
+## StackedData
+
+"stackedData", "pfdData", "pfdPartsData", 
+
+"marginalData", "markers", "profileData", 
+
+"stackedData<-", "pfdData<-", "pfdPartsData<-", 
+
+"marginalData<-", "markers<-", "profileData<-",
+
+"computeMarkers", "readStackedData", "computeProfileData",
+
+"computeMarginalData", "computePFDData", "computePFDPartsData"
+
+)
+

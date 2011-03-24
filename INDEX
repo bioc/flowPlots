@@ -1,0 +1,25 @@
+adultsNeonates          	The adultsNeonates example data set of "stacked" data.
+computeMarginalData-methods	Method computeMarginalData from Class "StackedData"
+computeMarkers-methods  	Method computeMarkers from Class "StackedData"
+computePFDData-methods  	Method computePFDData from Class "StackedData"
+computePFDGroupStatsList	Compute Group Stats on PFD Data to Be Used In a Legend
+computePFDPartsData-methods	Method computePFDPartsData from Class "StackedData"
+computeProfileData-methods	Method computeProfileData from Class "StackedData"
+marginalData-methods    	Methods to get or set marginalData from Class "StackedData"
+markers-methods         	Methods to get or set markers from Class "StackedData"
+pfdData-methods         	Methods to get or set pfdData from Class "StackedData"
+pfdPartsData-methods    	Methods to get or set pfdPartsData from Class "StackedData"
+profileData-methods     	Methods to get or set profileData from Class "StackedData"
+stackedData-methods     	Methods to get or set stackedData from Class "StackedData"
+GroupListBoxplot        	A Boxplot Function With Embedded Statistical Tests for Comparing Groups
+legendPFDStatsGroupNames        Create Group Names With Embedded Stats to Use in a Plot Legend
+makeBarplotData         	Prepare Profile Data for a Call to Barplot()
+makeDataList            	Prepare Data in a Data Frame for a Call to GroupListBoxplot()
+makeTernaryData         	Prepare PFD Data for a Call to ternaryplot()
+marginalDF              	An example of marginalData
+markerMatrix            	An example of markers data.
+pfdDF                   	An example of pfdData
+pfdPartsList            	An example of pfdPartsData
+profileDF               	An example of profileData
+readStackedData         	Method readStackedData from Class "StackedData"
+StackedData-class       	Class "StackedData"

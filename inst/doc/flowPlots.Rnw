@@ -1,0 +1,445 @@
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+%\VignetteIndexEntry{Plots with Embedded Tests for Gated Flow Cytometry Data}
+%\VignetteDepends{flowPlots, vcd}
+%\VignetteKeywords{}
+%\VignettePackage{flowPlots}
+\documentclass[11pt]{article}
+
+\SweaveOpts{keep.source=TRUE,pdf=TRUE,eps=FALSE}
+
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rcode}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textsf{#1}}}
+\newcommand{\Rdata}[1]{{\textsf{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+
+
+\title{flowPlots: An R Package for Analyzing Gated ICS Flow Cytometry Data} 
+\author{Natalie Hawkins, Steve Self}
+\date{\today\\Version 1.0.0}
+
+
+
+\usepackage[text={7.5in,9in},centering]{geometry}
+\usepackage{Sweave}
+\setkeys{Gin}{width=0.95\textwidth}
+\usepackage[round]{natbib}
+
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+
+% \usepackage{setspace}
+% \setlength{\parindent}{0in}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  The \Rpackage{flowPlots} package provides graphical displays with embedded statistical tests for gated ICS flow cytometry data, helper functions to prepare data for plotting, and a data class which stores "stacked" data and has methods for computing summary measures on stacked data, such as marginal, polyfunctional degree (pfd) data, and polyfunctional degree parts (pfdParts) data. 
+\end{abstract}
+
+
+\section{Introduction}
+  The \Rpackage{flowPlots} package provides a boxplot function with embedded
+statistical tests to compare groups, data helper functions to prepare data
+for the boxplot, ternary plot, or bar plot, and a data storage class, \Rclass{StackedData}, which has methods to create profile and summary data such as marginal, polyfunctional degree (pfd), and polyfunctional degree parts (pfdParts) data from "stacked" data.  This document provides examples of the graphical displays which can be used to analyze gated ICS flow cytometry data.  Most of these displays are based on summary data.  If the summary data are already available, the displays can be made directly.  If the summary data are not available, but the data is available in "stacked" format, methods from the \Rclass{StackedData} class can be used to compute the summary data.  Examples are given to illustrate the use of the \Rclass{StackedData} class.  If the summary data are not available and the data is available in a format different from "stacked", the user can take advantage of this package by converting the data to the "stacked" format.  The examples are based on a small subset of the data described in \citet{kollmann09}.
+
+\section{Plotting the data: boxplots, ternary plot, bar plot}
+   The boxplot function and the data helper functions are used in the following examples.  We load the profile data and the various summary data directly; i.e. we already have it available and do not need to compute it. For each example, we show the first few rows of the data frame being plotted.
+  
+<<loadPackage, echo=false,results=hide>>=
+library(flowPlots)
+@
+
+%% -------------------------------------------------------------------------
+%% Profile Data
+%% -------------------------------------------------------------------------
+
+\subsection{Boxplots to compare groups on \Rdata{profileData}}
+
+<<profBP>>=
+data(profileDF)
+profileDataSubset = subset(profileDF, stim=="LPS" & concGroup==3 & cell=="mDC")
+profileDataSubset[1:3,]
+# Use data helper function, makeDataList()
+groupDataList = makeDataList(profileDataSubset ,"group", 1:16)
+# Make x-axis tick labels
+data(markerMatrix)
+theMarkers = colnames(markerMatrix)
+xTickLabels = cbind(theMarkers, t(markerMatrix))
+@ 
+%
+
+\begin{center}  
+<<fig=TRUE, width=10, height=6, echo=TRUE>>=
+GroupListBoxplot(groupDataList, xlabel="", 
+   ylabel="Percent of All Cells", boxOutliers=FALSE,
+   xAxisLabels=xTickLabels, xMtext="Marker Category", 
+   mainTitle="Stimulation = LPS, Concentration Group = 3, Cell = mDC", 
+   legendGroupNames=c("Adults","Neonates"), pointColor=c(2,4),    
+   testTitleCEX=.8, nCEX=.6, pCEX=.6, legendColor=c(2,4), legendCEX=.6,
+   xAxisCEX=.7, xAtMtext=-1)
+mtext("PROFILE DATA", side=3, line=2)
+@
+\end{center}
+
+%% -------------------------------------------------------------------------
+%% Marginal Data
+%% -------------------------------------------------------------------------
+
+\subsection{Boxplots to compare groups on \Rdata{marginalData}}
+
+<<margBP>>=
+data(marginalDF)
+marginalDataSubset = subset(marginalDF, stim=="LPS" & concGroup==3 & cell=="mDC")
+marginalDataSubset[1:3,]
+# Use data helper function, makeDataList()
+groupDataList = makeDataList(marginalDataSubset ,"group", 1:5)
+@ 
+%
+
+\begin{center}  
+<<fig=TRUE, width=10, height=6, echo=TRUE>>=
+GroupListBoxplot(groupDataList, xlabel="Cytokine", 
+   ylabel="Percent of All Cells", boxOutliers=FALSE,
+   xAxisLabels=c("TNFa","IL6","IL12","IFNa","AnyMarker"), 
+   mainTitle="Stimulation = LPS, Concentration Group = 3, Cell = mDC", 
+   legendGroupNames=c("Adults","Neonates"), pointColor=c(2,4),    
+   testTitleCEX=.8, nCEX=.8, pCEX=.8, legendColor=c(2,4), legendCEX=.7)
+mtext("MARGINAL DATA", side=3, line=2)
+@
+\end{center}
+
+%% -------------------------------------------------------------------------
+%% PFD Data
+%% -------------------------------------------------------------------------
+
+\subsection{Boxplots to compare groups on \Rdata{pfdData}}
+
+<<pfdBP>>=
+data(pfdDF)
+pfdDataSubset = subset(pfdDF, stim=="LPS" & concGroup==3 & cell=="mDC")
+pfdDataSubset[1:3,]
+# Use data helper function, makeDataList()
+groupDataList = makeDataList(pfdDataSubset ,"group", 1:4)
+@ 
+%
+
+\begin{center}  
+<<fig=TRUE, width=10, height=6, echo=TRUE>>=
+GroupListBoxplot(groupDataList, xlabel="Cytokine", 
+   ylabel="Percent of Reactive Cells", boxOutliers=FALSE,
+   mainTitle="Stimulation = LPS, Concentration Group = 3, Cell = mDC", 
+   legendGroupNames=c("Adults","Neonates"), pointColor=c(2,4),    
+   testTitleCEX=.8, nCEX=.8, pCEX=.8, legendColor=c(2,4), legendCEX=.7)
+mtext("PFD DATA", side=3, line=2)
+@
+\end{center}
+
+%% -------------------------------------------------------------------------
+%% PFD=1 Parts Data
+%% -------------------------------------------------------------------------
+
+\subsection{Boxplots to compare groups on \Rdata{pfdPartsData}}
+
+<<pfd1BP>>=
+data(pfdPartsList)
+# Look at the composition percentages for the case where PFD=1
+pfdEq1PartsDataSubset = subset(pfdPartsList[[1]], stim=="LPS" & concGroup==3 & cell=="mDC")
+pfdEq1PartsDataSubset[1:3,]
+# Use data helper function, makeDataList()
+groupDataList = makeDataList(pfdEq1PartsDataSubset, "group", 1:4)
+@ 
+%
+
+\begin{center}  
+<<fig=TRUE, width=10, height=6, echo=TRUE>>=
+GroupListBoxplot(groupDataList, xlabel="Cytokine", 
+   ylabel="Percent of Cells With PFD=1", boxOutliers=FALSE,
+   mainTitle="Stimulation = LPS, Concentration Group = 3, Cell = mDC", 
+   legendGroupNames=c("Adults","Neonates"), pointColor=c(2,4),    
+   testTitleCEX=.8, nCEX=.8, pCEX=.8, legendColor=c(2,4), legendCEX=.7)
+mtext("COMPOSITION OF PFD=1 DATA", side=3, line=2)
+@
+\end{center}
+
+
+%% -------------------------------------------------------------------------
+%% PFD=2 Parts Data
+%% -------------------------------------------------------------------------
+
+<<pfd2BP>>=
+# Look at the composition percentages for the case where PFD=2
+pfdEq2PartsDataSubset = subset(pfdPartsList[[2]], stim=="LPS" & concGroup==3 & cell=="mDC")
+pfdEq2PartsDataSubset[1:3,]
+# Use data helper function, makeDataList()
+groupDataList = makeDataList(pfdEq2PartsDataSubset, "group", 1:6)
+@ 
+%
+
+\begin{center}  
+<<fig=TRUE, width=10, height=6, echo=TRUE>>=
+GroupListBoxplot(groupDataList, xlabel="Cytokine", 
+   ylabel="Percent of Cells With PFD=2", boxOutliers=FALSE,
+   mainTitle="Stimulation = LPS, Concentration Group = 3, Cell = mDC", 
+   legendGroupNames=c("Adults","Neonates"), pointColor=c(2,4),    
+   testTitleCEX=.8, nCEX=.8, pCEX=.8, legendColor=c(2,4), legendCEX=.7)
+mtext("COMPOSITION OF PFD=2 DATA", side=3, line=2)
+@
+\end{center}
+
+
+%% -------------------------------------------------------------------------
+%% PFD=3 Parts Data
+%% -------------------------------------------------------------------------
+
+<<pfd3BP>>=
+# Look at the composition percentages for the case where PFD=3
+pfdEq3PartsDataSubset = subset(pfdPartsList[[3]], stim=="LPS" & concGroup==3 & cell=="mDC")
+pfdEq3PartsDataSubset[1:3,]
+# Use data helper function, makeDataList()
+groupDataList = makeDataList(pfdEq3PartsDataSubset, "group", 1:4)
+@ 
+%
+
+\begin{center}  
+<<fig=TRUE, width=10, height=6, echo=TRUE>>=
+GroupListBoxplot(groupDataList, xlabel="Cytokine", 
+   ylabel="Percent of Cells With PFD=3", boxOutliers=FALSE,
+   mainTitle="Stimulation = LPS, Concentration Group = 3, Cell = mDC", 
+   legendGroupNames=c("Adults","Neonates"), pointColor=c(2,4),    
+   testTitleCEX=.8, nCEX=.8, pCEX=.8, legendColor=c(2,4), legendCEX=.7)
+mtext("COMPOSITION OF PFD=3 DATA", side=3, line=2)
+@
+\end{center}
+
+%% -------------------------------------------------------------------------
+%% PFD Data / Ternary Plot
+%% -------------------------------------------------------------------------
+
+\subsection{Ternary plots to compare groups on \Rdata{pfdData}}
+
+<<ternPlot>>=
+data(pfdDF)
+pfdDataSubset = subset(pfdDF, stim=="LPS" & concGroup==3 & cell=="mDC")
+# Use data helper function, makeTernaryData() 
+ternaryData = makeTernaryData(pfdDataSubset, 1, 2, 3:4)
+colnames(ternaryData) = c("PFD1", "PFD2", "PFD3-4")
+adultPFDData = subset(pfdDataSubset, group=="adult", select=c(PFD1:PFD4))
+neoPFDData = subset(pfdDataSubset, group=="neonate", select=c(PFD1:PFD4))
+groupPFDDataList = list(adultPFDData, neoPFDData)
+pfdGroupStatsList = computePFDGroupStatsList(groupPFDDataList, pfdValues=1:4,
+   numDigitsMean=3, numDigitsSD=2)
+groupNames = c("Adults","Neonates")
+legendNames = legendPFDStatsGroupNames(pfdGroupStatsList,groupNames)
+@ 
+%
+
+\begin{center}  
+<<fig=TRUE, width=10, height=8, echo=TRUE>>=
+# Load the package, vcd, for the ternaryplot() fcn
+library(vcd)
+ternaryplot(ternaryData, cex=.5, col=as.numeric(pfdDataSubset$group)*2,  
+   main="TERNARY PLOT OF PFD DATA,
+Stimulation = LPS, Concentration Group = 3, Cell = mDC")
+grid_legend(0.8, 0.7, pch=c(20,20), col=c(2,4), legendNames, 
+   title = "Group (n), mean/sd:", gp=gpar(cex=.8))
+@
+\end{center}
+
+%% -------------------------------------------------------------------------
+%% Profile Data / Bar Plot
+%% -------------------------------------------------------------------------
+
+\subsection{Bar plots to compare groups on \Rdata{profileData}}
+
+<<barPlot>>=
+data(profileDF)
+profileDataSubset = subset(profileDF, stim=="LPS" & concGroup==3 & cell=="mDC")
+profileColumns = 1:16
+# Use data helper function, makeBarplotData()
+barplotData = makeBarplotData(profileDataSubset, profileColumns, groupVariableName="group")
+barplotDataWithLegend = cbind(barplotData, NA, NA)
+barColors = gray(0:15/15)[16:1]
+@ 
+%
+\begin{center}  
+<<fig=TRUE, width=10, height=8, echo=TRUE>>=
+barplot(barplotDataWithLegend, col=barColors, 
+main="Stimulation = LPS, Concentration Group = 3, Cell = mDC")
+legendNames = rownames(barplotData)
+legend(2.75,100,legend=legendNames[16:1],col=barColors[16:1],cex=.8,pch=20)
+mtext("BAR PLOT OF PROFILE DATA", side=3, line=3)
+@
+\end{center}
+
+%% -------------------------------------------------------------------------
+%% Boxplot Example: Multiple Groups, Point Colors
+%% -------------------------------------------------------------------------
+
+\section{A Boxplot Example to Illustrate Multiple Groups and Point Colors}
+As many as 11 groups can be compared using the \Rfunction{GroupListBoxplot} function.  Data points overlaid on the boxplots can be a single color, a color for each group (by specifying pointColor as a vector), varying colors for categories on the x-axis and for groups (by specifying pointColor as a matrix, where rows represent groups and cols represent x-cats), or a color can be specifically assigned for each point on the plot (by setting pointColor equal to a list of matrices, where each matrix represents a group, rows represent subjects and cols represent x-cats).  In the following made-up example, we compare five groups and use point coloring to identify gender.      
+
+<<boxplotExample>>=
+# Create Example data list
+group1 = as.data.frame(cbind(rnorm(10,1.2,.6),rnorm(10,3.2,.8)))
+group2 = as.data.frame(cbind(rnorm(10,1.2,.6),rnorm(10,3.2,.8)))
+group3 = as.data.frame(cbind(rnorm(10,1.2,.6),rnorm(10,3.2,.8)))
+group4 = as.data.frame(cbind(rnorm(10,1.2,.6),rnorm(10,3.2,.8)))
+group5 = as.data.frame(cbind(rnorm(10,1.2,.6),rnorm(10,3.2,.8)))
+dataList = list(group1,group2,group3,group4,group5) 
+# Create pointColor list
+colorGroup1 = cbind(c(rep(2,5),rep(4,5)),c(rep(2,5),rep(4,5)))
+colorGroup2 = cbind(c(rep(2,5),rep(4,5)),c(rep(2,5),rep(4,5)))
+colorGroup3 = cbind(c(rep(2,5),rep(4,5)),c(rep(2,5),rep(4,5)))
+colorGroup4 = cbind(c(rep(2,5),rep(4,5)),c(rep(2,5),rep(4,5)))
+colorGroup5 = cbind(c(rep(2,5),rep(4,5)),c(rep(2,5),rep(4,5)))
+pointColorList = list(colorGroup1,colorGroup2,colorGroup3,colorGroup4, colorGroup5)
+@
+%
+\begin{center}  
+<<fig=TRUE, width=10, height=6, echo=TRUE>>=
+GroupListBoxplot(dataList, xlabel="Cytokine", ylabel="Percent of CD4 Cells", 
+xAxisLabels=c("IFNg","TNFa"), mainTitle="Compare Innate Immune Response", 
+legendGroupNames=c("Female","Male"), legendColors=c(2,4), boxOutliers=FALSE,   
+pointColor=pointColorList, testTitleCEX=.8, nCEX=.8, pCEX=.8)
+text(3,3,"Groups 1-5 are plotted left to right")
+@
+\end{center}
+
+%% -------------------------------------------------------------------------
+%% The StackedData Class
+%% -------------------------------------------------------------------------
+
+\section{The \Rclass{StackedData} Class}
+"Stacked" data refers to data originating from an ICS Flow Cytometry experiment, after gating has been applied.  The marker categories (for example, cytokine combinations) are "stacked" in the table of data.  An example subset:
+<<showData>>=
+# load an .rda file of stacked data
+data(adultsNeonates)
+adultsNeonates[1:16,]
+@ 
+%
+
+The \Rclass{StackedData} class has 6 slots for data: 
+\begin{enumerate}
+  
+\item stackedData, a \Rcode{data.frame}
+\item profileData, a \Rcode{data.frame}
+\item marginalData, a \Rcode{data.frame}.
+\item pfdData, a \Rcode{data.frame}.
+\item pfdPartsData, a \Rcode{list} of \Rcode{data.frame}'s.
+\item markers, a \Rcode{matrix}.
+
+\end{enumerate}
+
+The \Rdata{stackedData} often is provided by the lab as a table in CSV format.
+
+The \Rdata{markers} data is a matrix of 0's and 1's in which each row of the matrix represents one of the possible marker combinations in the "stacked" data and each column represents a marker.  The \Rdata{stackedData} data frame should be sorted within each subset of interest (for example, subjectID, cellType, stimulation, and concentration) so that the marker combinations match the order of the rows in the \Rdata{markers} matrix before using the \Rclass{StackedData} class methods to compute summary data.  
+
+The \Rclass{StackedData} class provides methods to compute the matrix of \Rdata{markers}, and the \Rdata{profileData}, \Rdata{marginalData}, \Rdata{pfdData}, and \Rdata{pfdPartsData} data frames.   
+
+\subsection{Marker Data: \Rdata{markers}} 
+The marker categories (eg. cytokine combinations) should be stacked in this order within each subset of interest in the \Rdata{stackedData}.
+<<showMarkers>>=
+data(markerMatrix)
+print(markerMatrix)
+@ 
+%
+\subsection{The Other Data Slots: \Rdata{stackedData}, \Rdata{profileData}, \Rdata{marginalData}, \Rdata{pfdData}, \Rdata{pfdPartsData}}
+Examples of the data held in these slots have been given elsewhere in this document: stackedData (Section 4), profileData (Section 2.1), marginalData (Section 2.2), pfdData (Section 2.3), and pfdPartsData (Section 2.4).
+
+
+%% -------------------------------------------------------------------------
+%% Using the StackedData class
+%% -------------------------------------------------------------------------
+
+\section{Using the \Rclass{StackedData} Class}
+In this section we create a StackedData object and use the class methods to compute profile and summary data.  
+
+\subsection{Create a \Robject{stackedDataObject}}
+<<createStackedData>>=
+# create the StackedData object based on the adultsNeonates data
+stackedDataObject = new("StackedData", stackedData = adultsNeonates)
+@ 
+%
+
+\subsection{Create the \Rdata{markers}}
+The stackedData can either include or exclude the "all-negative" combination of markers (eg. the TNFa-IL6-IL12-IFNa- row).  If that row is included, set the \Rfunction{computeMarkers} parameter \Rcode{includeAllNegativeRow} to \Rcode{TRUE}, else set it to \Rcode{FALSE}.  If you create this matrix on your own, create a matrix which matches the data.  
+
+<<createMarkers>>=
+markerNames = c("TNFa","IL6","IL12","IFNa")
+markers = computeMarkers(markerNames, includeAllNegativeRow=TRUE)
+markers(stackedDataObject) = markers
+@
+%
+
+\subsection{Sort the \Rdata{stackedData}}
+The \Rdata{stackedData} should be sorted within subsets of interest (such as: subjectID, cellType, stimulation, and concentration) so that the data within each subset matches the marker combinations specified by the marker matrix.  Usually the lab provides data sorted in this way.  If not, sort it before applying the \Rclass{StackedData} class methods.   
+
+\subsection{Create the \Rdata{profileData}}
+<<createProfileData>>=
+# The byVarNames specify the subsets in the data
+byVarNames = c("stim", "concGroup", "cell")
+profileData = computeProfileData(stackedDataObject, byVarNames, "id", "percentAll", "group")
+profileData(stackedDataObject) = profileData
+@ 
+%
+
+\subsection{Create the \Rdata{marginalData}}
+<<createMarginalData>>=
+# The byVarNames specify the subsets in the data
+byVarNames = c("stim", "concGroup", "cell")
+marginalData = computeMarginalData(stackedDataObject, byVarNames, "id", "percentAll", "group")
+marginalData(stackedDataObject) = marginalData
+@ 
+%
+
+\subsection{Create the \Robject{pfdData}}
+<<createPFDData>>=
+# The byVarNames specify the subsets in the data
+byVarNames = c("stim", "concGroup", "cell")
+pfdData = computePFDData(stackedDataObject, byVarNames, "id", "percentAll", "group")
+pfdData(stackedDataObject) = pfdData
+@ 
+%
+
+\subsection{Create the \Robject{pfdPartsData}}
+<<createPFDPartsData>>=
+# The byVarNames specify the subsets in the data
+byVarNames = c("stim", "concGroup", "cell")
+pfdPartsData = computePFDPartsData(stackedDataObject, byVarNames, "id", "percentAll", "group")
+pfdPartsData(stackedDataObject) = pfdPartsData
+@ 
+%
+
+\clearpage
+
+%% -------------------------------------------------------------------------
+%% Acknowledgments
+%% -------------------------------------------------------------------------
+
+\section{Acknowledgments}
+  We would like to thank Chris Wilson, et al, for allowing us to use the adultsNeonates data subset as the example data set in this package.  
+
+
+\bibliographystyle{plainnat}
+\bibliography{theRefs}
+
+\end{document}
+
+
+
+
+
+
+
+
