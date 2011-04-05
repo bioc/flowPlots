@@ -33,7 +33,6 @@
  }
 
  \value{
-   # Get the profileData from a StackedData object.
    data frame of profile data.
  }
 
