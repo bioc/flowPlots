@@ -25,7 +25,6 @@
    marginalData(object)     
 
   # Set the marginal data slot of a StackedData object
-  # marginalData(object) <- value
   \S4method{marginalData}{StackedData}(object) <- value 
 
  }

@@ -24,7 +24,6 @@
    profileData(object)    
 
    # Set the profileData slot of a StackedData object.
-   # profileData(object) = value
    \S4method{profileData}{StackedData}(object) <- value
  }
 

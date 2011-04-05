@@ -24,7 +24,6 @@
     pfdData(object)   
 
     # Set the pfdData slot of a StackedData object.
-    # pfdData(object) = value
     \S4method{pfdData}{StackedData}(object) <- value
  }
 

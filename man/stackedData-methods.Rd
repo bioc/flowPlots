@@ -23,7 +23,6 @@
    stackedData(object)    
 
    # Set the stacked data slot of a StackedData object
-   # stackedData(object) = value
    \S4method{stackedData}{StackedData}(object) <- value
 }
 \arguments{

@@ -23,7 +23,6 @@
    pfdPartsData(object)    
  
    # Set the pfdPartsData of a Stacked Data object.
-   # pfdPartsData(object) = value   
    \S4method{pfdPartsData}{StackedData}(object) <- value
  }
 
