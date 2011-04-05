@@ -24,12 +24,13 @@
     pfdData(object)   
 
     # Set the pfdData slot of a StackedData object.
-    pfdData(object) = value
-
+    # pfdData(object) = value
+    \S4method{pfdData}{StackedData}(object) <- value
  }
 
  \arguments{
    \item{object}{an object of the StackedData class}
+   \item{value}{a replacement value}
  }
 
  \value{

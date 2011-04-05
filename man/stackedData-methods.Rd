@@ -23,10 +23,12 @@
    stackedData(object)    
 
    # Set the stacked data slot of a StackedData object
-   stackedData(object) = value
+   # stackedData(object) = value
+   \S4method{stackedData}{StackedData}(object) <- value
 }
 \arguments{
    \item{object}{an object of the StackedData class}
+   \item{value}{a replacement value}
 }
 
 \value{

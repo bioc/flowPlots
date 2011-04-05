@@ -23,12 +23,13 @@
    pfdPartsData(object)    
  
    # Set the pfdPartsData of a Stacked Data object.
-   pfdPartsData(object) = value   
-
+   # pfdPartsData(object) = value   
+   \S4method{pfdPartsData}{StackedData}(object) <- value
  }
 
  \arguments{
    \item{object}{an object of the StackedData class}
+   \item{value}{a replacement value}
  }
 
  \value{

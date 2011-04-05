@@ -25,11 +25,14 @@
    marginalData(object)     
 
   # Set the marginal data slot of a StackedData object
-   marginalData(object) = value
+  # marginalData(object) <- value
+  \S4method{marginalData}{StackedData}(object) <- value 
+
  }
 
  \arguments{
    \item{object}{an object of the StackedData class}
+   \item{value}{a replacement value} 
  }
 
  \value{

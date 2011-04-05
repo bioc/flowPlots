@@ -24,11 +24,13 @@
    profileData(object)    
 
    # Set the profileData slot of a StackedData object.
-   profileData(object) = value
+   # profileData(object) = value
+   \S4method{profileData}{StackedData}(object) <- value
  }
 
  \arguments{
    \item{object}{an object of the StackedData class}
+   \item{value}{a replacement value}
  }
 
  \value{

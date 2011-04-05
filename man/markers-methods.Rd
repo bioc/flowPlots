@@ -22,10 +22,12 @@
    markers(object)    
 
    # Set the marker matrix slot of a StackedData object.
-   markers(object) = value
+   # markers(object) = value
+   \S4method{markers}{StackedData}(object) <- value
  }
  \arguments{
    \item{object}{an object of the StackedData class}
+   \item{value}{a replacement value}
  }
  \value{
    matrix of markers data.
