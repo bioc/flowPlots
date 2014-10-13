@@ -1,6 +1,6 @@
 Package: flowPlots
 Type: Package
-Version: 1.14.0
+Version: 1.15.0
 Title: flowPlots: analysis plots and data class for gated flow cytometry data
 Description: Graphical displays with embedded statistical tests for gated ICS flow cytometry data, and a data class which stores "stacked" data and has methods for computing summary measures on stacked data, such as marginal and polyfunctional degree data.
 Author: N. Hawkins, S. Self 
